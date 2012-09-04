@@ -73,11 +73,11 @@ Just be sure that every element have a unique name (in the following example, if
                 "myAnimation": {
                     "index": 3,
                     "type": "BitmapAnimation",
-                    "texture": "FooAnimation",
+                    "texture": "FooBar",
                     "onLoad": "gotoAndStop",
                     "onLoadFrame": "myStopFrame",
                     "animations": {
-                        "myStopFrame": [0],
+                        "myStopFrame": [10],
                         "myFullAnimation": {
                             "frames": [10, 15],
                             "next": "myFullAnimation",
