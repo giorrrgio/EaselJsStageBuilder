@@ -69,7 +69,7 @@ Just be sure that every element have a unique name (in the following example, if
                         "onClick": "anyFunctionDefinedInWindowContext",
                         "onMouseOver": "anotherFunctionDefinedInWindowContext"
                     }
-                }
+                },
                 "myAnimation": {
                     "index": 3,
                     "type": "BitmapAnimation",
