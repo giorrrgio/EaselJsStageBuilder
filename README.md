@@ -19,7 +19,7 @@ Define a canvas:
   <canvas id="mainCanvas" width="760" height="700">Canvas is not supported</canvas>
 ```
 
-Given that you already have a texture packer JSON+PNG export named FooBar.png and FooBar.json (they must have the same name), you can build a JSON file describing the objects (with bitmaps and containers, nesting as much as you need) in your level in a very simple and intuitive way.
+Given that you already have a texture packer JSON+PNG export named FooBar.png and FooBar.json (they must have the same name), you can build a JSON file describing the objects (with bitmaps, texts, containers - nesting them as much as you need) in your level in a very simple and intuitive way.
 Just be sure that every element have a unique name (in the following example, if you define two myBitmap in the same container, the last will overwrite the first)
 ```javascript
 {
@@ -112,6 +112,5 @@ $(document).ready(function(){
     });
             
 });
-
-It will load everything, and every object created will be fully loaded and accessible as the promises are resolved.
 ```
+It will load everything, and every object created will be fully loaded and accessible as the promises are resolved.
