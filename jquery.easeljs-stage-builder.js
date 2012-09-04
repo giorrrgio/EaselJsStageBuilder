@@ -1,14 +1,15 @@
 (function($){
     $.fn.easelJsStageBuilder = function(stage, settings) {
         var config = {
-            enableMouseOver: true
+            enableMouseOver: true,
+            namespace: 'createjs'
         };
-        this.stage = new Stage($(this).get(0));
+        this.stage = new window[config.namespace].Stage($(this).get(0));
         if (settings){$.extend(config, settings);}
         if (config.enableMouseOver == true) {
             this.stage.enableMouseOver();
         }
-        var DEBUG = true;
+        var DEBUG = false;
         var $this = this;
         $this.textures = {};
         $this.plainObjectTree = {};
@@ -50,29 +51,28 @@
                     current_texture = val["texture"];
                 }
                 if(val["type"] != "BitmapAnimation") {             
-                    newelement = new window[val["type"]];
+                    newelement = new window[config.namespace][val["type"]];
                 } else {
                     if (val['animations'] != undefined) {
-                        var newSpriteSheet = new SpriteSheet({
+                        var newSpriteSheet = new window[config.namespace].SpriteSheet({
                             images: $this.textures[val["texture"]]._images,
                             frames: [],
                             animations: val['animations']
                         });
                         newSpriteSheet._frames = $this.textures[val["texture"]]._frames;
-                        SpriteSheetUtils.addFlippedFrames(newSpriteSheet, true, false, false);
                     } else {
                         var newSpriteSheet = $this.textures[val["texture"]];
                     }
-                    newelement = new window[val["type"]](newSpriteSheet);
+                    newelement = new window[config.namespace][val["type"]](newSpriteSheet);
     
                 }
                 if (val["type"] == "Bitmap") {
-                    newelement.image = SpriteSheetUtils.extractFrame($this.textures[current_texture],key);
+                    newelement.image = window[config.namespace].SpriteSheetUtils.extractFrame($this.textures[current_texture],val["bitmap"]);
                 } else if(val["type"] == "Shape") {
-                    var g = new Graphics();
+                    var g = new window[config.namespace].Graphics();
                     var gp = val["graphics"];
                     g.beginFill(
-                        Graphics.getRGB(
+                        window[config.namespace].Graphics.getRGB(
                             gp["fill"]["r"],
                             gp["fill"]["g"],
                             gp["fill"]["b"]
@@ -87,11 +87,27 @@
                     var onLoad = val["onLoad"];
                     var onLoadFrame = val["onLoadFrame"];
                     newelement[onLoad](onLoadFrame);
-                    parent.addChildAt(newelement, $addAt);
+                    if ($addAt != undefined) {
+                        parent.addChildAt(newelement, $addAt);
+                    } else {
+                        parent.addChild(newelement);
+                    }
 
                 }
+                if (val["inheritFrom"] != undefined ) {
+                    var targetEl = $this.plainObjectTree[val["inheritFrom"]];
+                    _.each(targetEl, function(targetVal, targetKey) {
+                        if (targetKey != 'id' && targetKey != '_matrix' && targetKey != 'parent') {
+                            newelement[targetKey] = targetVal;
+                        }
+                    });
+                }
                 newelement.name = key;
-                parent.addChildAt(newelement, val["index"]);
+                if (val["index"] != undefined) {
+                    parent.addChildAt(newelement, val["index"]);
+                } else {
+                    parent.addChild(newelement);
+                }
                 $this.plainObjectTree[newelement.name] = newelement;
                 if (val["properties"] != undefined) {
                     _.each(val["properties"], function(val2, key2) {
@@ -216,7 +232,7 @@
                     frames: data_frames,
                     animations: animations
                 };
-                pieces = new SpriteSheet(data);
+                pieces = new window[config.namespace].SpriteSheet(data);
                 deferred.resolve({"name": JSONFilename.substr(0, JSONFilename.lastIndexOf('.')), "pieces":pieces});
             });
             return deferred.promise();
@@ -229,3 +245,4 @@
         return this;
     };
 })(jQuery);
+
