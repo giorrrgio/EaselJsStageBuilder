@@ -94,6 +94,9 @@ Just be sure that every element have a unique name (in the following example, if
     }
 }
 ```
+*Notice*: BitmapAnimations point to frames with their index in the Texture Packer JSON: it is strongly suggested that you use independent exports for complex animations, otherwise new additions to the global Texture Packer project (in which animation frames are) will offset every frame and mess your animation up!
+
+
 Now feed the builder with your JSON and you are ready to go!
 
 ```javascript
@@ -118,7 +121,7 @@ You can easily access the stage:
 easeljsBuilder.stage
 ```
 
-easeljsBuilder is 100% deferred compliant for loading JSONs and PNG, so you don't have to worry about anything when loading complex levels. Consider that you can define multiple level JSON each referring to multiples texture packers exports. For example:
+easeljsBuilder is 100% deferred compliant for loading JSONs and PNGs, so you don't have to worry about anything when loading complex levels. Consider that you can define multiple JSON levels each referring to multiples texture packers exports. For example:
 
 ```javascript
 $(document).ready(function(){
