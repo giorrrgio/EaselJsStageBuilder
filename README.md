@@ -10,8 +10,8 @@ Include the dependencies and this script.
 ```html
   <script src="jquery.min.js"></script>
   <script src="underscore-min.js"></script>
-	<script src="easel.js"></script>
-	<script src="jquery.easeljs-stage-builder.js"></script>
+  <script src="easel.js"></script>
+  <script src="jquery.easeljs-stage-builder.js"></script>
 ```
 
 Define a canvas:
