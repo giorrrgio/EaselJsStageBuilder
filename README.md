@@ -70,6 +70,25 @@ Just be sure that every element have a unique name (in the following example, if
                         "onMouseOver": "anotherFunctionDefinedInWindowContext"
                     }
                 }
+                "myAnimation": {
+                    "index": 3,
+                    "type": "BitmapAnimation",
+                    "texture": "FooAnimation",
+                    "onLoad": "gotoAndStop",
+                    "onLoadFrame": "myStopFrame",
+                    "animations": {
+                        "myStopFrame": [0],
+                        "myFullAnimation": {
+                            "frames": [10, 15],
+                            "next": "myFullAnimation",
+                            "frequency": 2
+                        }
+                    },
+                    "properties": {
+                        "x": 200,
+                        "y": 90
+                    }
+                }
             }
         }
     }
