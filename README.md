@@ -77,9 +77,14 @@ Just be sure that every element have a unique name (in the following example, if
                     "onLoad": "gotoAndStop",
                     "onLoadFrame": "myStopFrame",
                     "animations": {
-                        "myStopFrame": [10],
+                        "myStopFrame": [
+                            10
+                        ],
                         "myFullAnimation": {
-                            "frames": [10, 15],
+                            "frames": [
+                                10,
+                                15
+                            ],
                             "next": "myFullAnimation",
                             "frequency": 2
                         }
@@ -87,6 +92,77 @@ Just be sure that every element have a unique name (in the following example, if
                     "properties": {
                         "x": 200,
                         "y": 90
+                    }
+                },
+                "MyPath": {
+                    "index": 0,
+                    "type": "Shape",
+                    "transform": [
+                        0.0499591,
+                        0,
+                        0,
+                        0.0499591,
+                        119.302,
+                        111.024
+                    ],
+                    "events": {
+                        "onClick": "polygonClick"
+                    },
+                    "properties": {
+                        "visible": true,
+                        "alpha": 0.7
+                    },
+                    "graphics": {
+                        "draw": [
+                            {
+                                "type": "beginFill",
+                                "properties": {
+                                    "fill": {
+                                        "r": 0,
+                                        "g": 136,
+                                        "b": 0
+                                    }
+                                }
+                            },
+                            {
+                                "type": "moveTo",
+                                "properties": {
+                                    "x": "1685",
+                                    "y": " 0"
+                                }
+                            },
+                            {
+                                "type": "lineTo",
+                                "properties": {
+                                    "x": "0",
+                                    "y": " 1753"
+                                }
+                            },
+                            {
+                                "type": "lineTo",
+                                "properties": {
+                                    "x": "1089",
+                                    "y": " 1753"
+                                }
+                            },
+                            {
+                                "type": "lineTo",
+                                "properties": {
+                                    "x": "1685",
+                                    "y": " 1157"
+                                }
+                            },
+                            {
+                                "type": "lineTo",
+                                "properties": {
+                                    "x": "1685",
+                                    "y": " 0"
+                                }
+                            },
+                            {
+                                "type": "closePath"
+                            }
+                        ]
                     }
                 }
             }

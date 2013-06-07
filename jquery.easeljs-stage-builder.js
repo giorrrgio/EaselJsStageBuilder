@@ -7,7 +7,7 @@
         this.stage = new window[config.namespace].Stage($(this).get(0));
         if (settings){$.extend(config, settings);}
         if (config.enableMouseOver == true) {
-            this.stage.enableMouseOver();
+            this.stage.mouseEventsEnabled = true;
         }
         var DEBUG = false;
         var $this = this;
@@ -69,18 +69,84 @@
                 if (val["type"] == "Bitmap") {
                     newelement.image = window[config.namespace].SpriteSheetUtils.extractFrame($this.textures[current_texture],val["bitmap"]);
                 } else if(val["type"] == "Shape") {
+                    /*"type": "Shape",
+                      "graphics": {
+                        "draw": [
+                            {
+                            "type": "rect",
+                            "properties": {
+                                "w": 760,
+                                    "h": 450,
+                                    "x": 0,
+                                    "y": 0
+                            },
+                            {
+                             "type": "circle",
+                                "properties": {
+                                    "radius": 760,
+                                    "x": 0,
+                                    "y": 0
+                             }
+                           ]
+                        }
+                    },
+                    "properties": {
+                        "alpha": "0.7",
+                            "visible": false
+                    },*/
                     var g = new window[config.namespace].Graphics();
                     var gp = val["graphics"];
-                    g.beginFill(
-                        window[config.namespace].Graphics.getRGB(
-                            gp["fill"]["r"],
-                            gp["fill"]["g"],
-                            gp["fill"]["b"]
-                        )
-                    );
-                    g[gp["draw"]["type"]]();
-                    var dp = gp["draw"]["properties"]
-                    g.drawRect(dp["x"], dp["y"], dp["w"], dp["h"]);
+                    _.each(gp['draw'], function(draw, key2) {
+                        var dp = draw["properties"];
+                        switch (draw["type"]) {
+                            case 'rect':
+                                g[draw["type"]](dp["x"], dp["y"], dp["w"], dp["h"]);
+                                break;
+                            case 'lineTo':
+                                g[draw["type"]](dp["x"], dp["y"]);
+                                break;
+                            case 'moveTo':
+                                g[draw["type"]](dp["x"], dp["y"]);
+                                break;
+                            case 'circle':
+                                g[draw["type"]](dp["x"], dp["y"], dp["radius"]);
+                                break;
+                            case 'bezierCurveTo':
+                                g[draw["type"]](dp["cp1x"], dp["cp1y"], dp["cp2x"], dp["cp2y"], dp["x"], dp["y"]);
+                                break;
+                            case 'quadraticCurveTo':
+                                g[draw["type"]](dp["cpx"], dp["cpy"], dp["x"], dp["y"]);
+                                break;
+                            case 'closePath':
+                                g[draw["type"]]();
+                                break;
+                            case 'beginFill':
+                                if (dp["fill"] != undefined) {
+                                    g.beginFill(
+                                        window[config.namespace].Graphics.getRGB(
+                                            dp["fill"]["r"],
+                                            dp["fill"]["g"],
+                                            dp["fill"]["b"]
+                                        )
+                                    );
+                                }
+                                break;
+                            case 'beginStroke':
+                                if (dp["stroke"] != undefined) {
+                                    g.beginStroke(
+                                        window[config.namespace].Graphics.getRGB(
+                                            dp["fill"]["r"],
+                                            dp["fill"]["g"],
+                                            dp["fill"]["b"]
+                                        )
+                                    );
+                                }
+                                break;
+                            default:
+                                return;
+                        }
+                    });
+
                     newelement.graphics = g;
                 } else if(val["type"] == "BitmapAnimation") {
                     var $addAt = val["index"];
@@ -108,6 +174,7 @@
                 } else {
                     parent.addChild(newelement);
                 }
+
                 $this.plainObjectTree[newelement.name] = newelement;
                 if (val["properties"] != undefined) {
                     _.each(val["properties"], function(val2, key2) {
@@ -118,6 +185,11 @@
                     _.each(val["events"], function(val3, key3) {
                         newelement[key3] = window[val3];
                     });
+                }
+                if (val["transform"] != undefined) {
+                    var trans = val["transform"];
+                    var matrix = new window[config.namespace].Matrix2D(trans[0], trans[1], trans[2], trans[3], trans[4], trans[5]);
+                    matrix.decompose(newelement);
                 }
                 if (val["children"] != undefined) {
                     parseElements(val["children"], newelement, current_texture);
@@ -195,6 +267,9 @@
         }
         var loadImageCache = {}
         var loadImage = function(imageSrc) {
+            if (imageSrc == undefined || imageSrc == '') {
+                deferred.resolve(undefined);
+            }
             var deferred = $.Deferred();
 
             preloader         = new Image();
